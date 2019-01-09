@@ -20,4 +20,19 @@ export interface CommonResponse<T> {
         warn: string;
     };
     statusCode?: string;
+    meta?: {
+        paging: {
+            total: number;
+            limit: number;
+        };
+    };
+    links?: any;
+    included?: any;
+}
+export interface IrisCommonDataFormat<T> {
+    type: string;
+    id: string;
+    attributes: T;
+    relationships?: any;
+    links?: any;
 }

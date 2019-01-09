@@ -1,7 +1,8 @@
 "use strict";
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
 Object.defineProperty(exports, "__esModule", { value: true });
-const client_1 = require("./client");
-exports.default = {
-    Client: client_1.Client
-};
+__export(require("./client"));
+__export(require("./testflight"));
 //# sourceMappingURL=index.js.map
