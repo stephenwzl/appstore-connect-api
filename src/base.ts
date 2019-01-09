@@ -1,5 +1,4 @@
 import axios, { AxiosResponse, AxiosInstance, AxiosStatic } from 'axios';
-// import axiosCookieJarSupport from '@3846masa/axios-cookiejar-support';
 import { CookieJar, Cookie } from 'tough-cookie';
 
 declare module 'axios' {

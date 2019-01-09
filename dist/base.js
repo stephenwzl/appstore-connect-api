@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = require("axios");
-// import axiosCookieJarSupport from '@3846masa/axios-cookiejar-support';
 const tough_cookie_1 = require("tough-cookie");
 axios_1.default.interceptors.request.use(config => {
     if (config.jar) {
