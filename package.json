@@ -1,0 +1,28 @@
+{
+  "name": "airship",
+  "version": "1.0.0",
+  "description": "appstore connect api wrapper for typescript",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "tsc && ./node_modules/.bin/mocha -t 10000 -r ./node_modules/ts-node/register ./test/**/*.ts",
+    "build": "tsc"
+  },
+  "keywords": [
+    "appstore",
+    "connect"
+  ],
+  "author": "stephenwzl<stephenwzlwork@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@3846masa/axios-cookiejar-support": "^0.4.2",
+    "axios": "^0.18.0"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.5",
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.2.2"
+  }
+}
