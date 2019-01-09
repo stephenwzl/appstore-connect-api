@@ -1,8 +1,6 @@
-import { Client, Session } from '../src/client';
-import { Testflight } from '../src/testflight';
+import { Client, Session, Testflight, Build } from '../src/index';
 import { expect } from 'chai';
 import 'mocha';
-import { Build } from '../src/build';
 
 describe('test testflight client', () => {
     it('check apple id in env', () => {

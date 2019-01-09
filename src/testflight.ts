@@ -144,7 +144,7 @@ export interface BetaReviewDetail {
     notes: string | null;
 }
 
-export interface Build {
+export interface BuildInfo {
     expirationDate: string;
     expired: boolean;
     iconAssetToken: {
