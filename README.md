@@ -5,6 +5,8 @@ App Store Connect API
  * 🤖目前仅支持完整的 Testflight自动化 API
  * 💪久经考验，生产环境使用长达 1年
 
+ [![npm version](https://badge.fury.io/js/appstore-connect-api.svg)](https://badge.fury.io/js/appstore-connect-api)
+
 
 ## 快速入门
 
