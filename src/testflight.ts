@@ -121,6 +121,22 @@ export class Testflight extends Base {
         await this.patch(`${this.apiEndPoint}/iris/v1/betaAppReviewDetails/${this.appId!}`, { data });
     }
 
+    async createBetaGroup(name: string) {
+        const data = {
+            attributes: { name },
+            relationships: {
+                app: {
+                    data: {
+                        id: this.appId!.toString(),
+                        type: 'apps'
+                    }
+                }
+            },
+            type: 'betaGroups'
+        };
+        return await this.post(`${this.apiEndPoint}/iris/v1/betaGroups`, { data }) as CommonResponse<IrisCommonDataFormat<BetaGroup>>;
+    }
+
     async deleteBetaGroup(groupId: string, deleteTesters = true) {
         const provider = await this.client!.currentProvider();
         const deleteTestersParam = deleteTesters ? '?deleteTesters=true' : '';

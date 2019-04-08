@@ -49,6 +49,7 @@ export declare class Testflight extends Base {
     updateBetaApplocalizations(localizationId: string, data: BetaAppLocalization): Promise<void>;
     updateBetaLicenceAgreement(agreementId: string, agreementText: string): Promise<void>;
     updateBetaReviewDetails(detail: BetaReviewDetail): Promise<void>;
+    createBetaGroup(name: string): Promise<CommonResponse<IrisCommonDataFormat<BetaGroup>>>;
     deleteBetaGroup(groupId: string, deleteTesters?: boolean): Promise<void>;
     /**
      * get a build instance with build id

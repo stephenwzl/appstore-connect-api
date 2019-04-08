@@ -137,6 +137,23 @@ class Testflight extends base_1.Base {
             yield this.patch(`${this.apiEndPoint}/iris/v1/betaAppReviewDetails/${this.appId}`, { data });
         });
     }
+    createBetaGroup(name) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const data = {
+                attributes: { name },
+                relationships: {
+                    app: {
+                        data: {
+                            id: this.appId.toString(),
+                            type: 'apps'
+                        }
+                    }
+                },
+                type: 'betaGroups'
+            };
+            return yield this.post(`${this.apiEndPoint}/iris/v1/betaGroups`, { data });
+        });
+    }
     deleteBetaGroup(groupId, deleteTesters = true) {
         return __awaiter(this, void 0, void 0, function* () {
             const provider = yield this.client.currentProvider();
