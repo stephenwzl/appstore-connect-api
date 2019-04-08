@@ -137,6 +137,13 @@ class Testflight extends base_1.Base {
             yield this.patch(`${this.apiEndPoint}/iris/v1/betaAppReviewDetails/${this.appId}`, { data });
         });
     }
+    deleteBetaGroup(groupId, deleteTesters = true) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const provider = yield this.client.currentProvider();
+            const deleteTestersParam = deleteTesters ? '?deleteTesters=true' : '';
+            yield this.delete(`https://appstoreconnect.apple.com/testflight/v2/providers/${provider.providerId}/apps/${this.appId}/groups/${groupId}${deleteTestersParam}`);
+        });
+    }
     /**
      * get a build instance with build id
      * @param buildId

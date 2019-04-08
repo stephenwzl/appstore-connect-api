@@ -36,7 +36,7 @@ export class Testflight extends Base {
 
     async getPreReleaseBuilds(preReleaseVersionId: string, limit = 10) {
         const response = await this.get(`${this.apiEndPoint}/iris/v1/builds?filter%5Bexpired%5D=false&filter%5BpreReleaseVersion%5D=${preReleaseVersionId}&filter%5BprocessingState%5D=PROCESSING,VALID&include=buildBetaDetail,betaBuildMetrics&limit=${limit}&sort=-version`);
-        return (response.data as CommonResponse<[IrisCommonDataFormat<Build>]>);
+        return (response.data as CommonResponse<[IrisCommonDataFormat<BuildInfo>]>);
     }
 
     /**
@@ -119,6 +119,12 @@ export class Testflight extends Base {
             attributes: detail
         }
         await this.patch(`${this.apiEndPoint}/iris/v1/betaAppReviewDetails/${this.appId!}`, { data });
+    }
+
+    async deleteBetaGroup(groupId: string, deleteTesters = true) {
+        const provider = await this.client!.currentProvider();
+        const deleteTestersParam = deleteTesters ? '?deleteTesters=true' : '';
+        await this.delete(`https://appstoreconnect.apple.com/testflight/v2/providers/${provider.providerId}/apps/${this.appId!}/groups/${groupId}${deleteTestersParam}`);
     }
 
     /**

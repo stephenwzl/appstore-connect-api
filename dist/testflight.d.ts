@@ -21,7 +21,7 @@ export declare class Testflight extends Base {
         version: string;
         platform: string;
     }>] | undefined>;
-    getPreReleaseBuilds(preReleaseVersionId: string, limit?: number): Promise<CommonResponse<[IrisCommonDataFormat<Build>]>>;
+    getPreReleaseBuilds(preReleaseVersionId: string, limit?: number): Promise<CommonResponse<[IrisCommonDataFormat<BuildInfo>]>>;
     /**
      * get beta review detail
      */
@@ -49,6 +49,7 @@ export declare class Testflight extends Base {
     updateBetaApplocalizations(localizationId: string, data: BetaAppLocalization): Promise<void>;
     updateBetaLicenceAgreement(agreementId: string, agreementText: string): Promise<void>;
     updateBetaReviewDetails(detail: BetaReviewDetail): Promise<void>;
+    deleteBetaGroup(groupId: string, deleteTesters?: boolean): Promise<void>;
     /**
      * get a build instance with build id
      * @param buildId
