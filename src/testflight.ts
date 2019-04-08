@@ -134,7 +134,8 @@ export class Testflight extends Base {
             },
             type: 'betaGroups'
         };
-        return await this.post(`${this.apiEndPoint}/iris/v1/betaGroups`, { data }) as CommonResponse<IrisCommonDataFormat<BetaGroup>>;
+        const res = await this.post(`${this.apiEndPoint}/iris/v1/betaGroups`, { data });
+        return res.data as CommonResponse<IrisCommonDataFormat<BetaGroup>>;
     }
 
     async deleteBetaGroup(groupId: string, deleteTesters = true) {

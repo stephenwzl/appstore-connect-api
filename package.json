@@ -1,6 +1,6 @@
 {
   "name": "appstore-connect-api",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "appstore connect api wrapper for typescript",
   "main": "dist/index.js",
   "scripts": {

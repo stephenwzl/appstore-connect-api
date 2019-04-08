@@ -151,7 +151,8 @@ class Testflight extends base_1.Base {
                 },
                 type: 'betaGroups'
             };
-            return yield this.post(`${this.apiEndPoint}/iris/v1/betaGroups`, { data });
+            const res = yield this.post(`${this.apiEndPoint}/iris/v1/betaGroups`, { data });
+            return res.data;
         });
     }
     deleteBetaGroup(groupId, deleteTesters = true) {
