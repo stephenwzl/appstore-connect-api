@@ -18,10 +18,11 @@ axios.interceptors.request.use(config => {
 axios.interceptors.response.use(response => {
     const config = response.config;
     const cookies = response.headers['set-cookie'] as [string];
-
-    cookies.forEach(cookie => {
-        config.jar!.setCookieSync(cookie, response.config.url!, { ignoreError: true });
-    });
+    if (cookies) {
+        cookies.forEach(cookie => {
+            config.jar!.setCookieSync(cookie, response.config.url!, { ignoreError: true });
+        });
+    }
     return response;
 }, error => Promise.reject(error));
 

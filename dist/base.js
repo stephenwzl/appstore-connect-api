@@ -15,9 +15,11 @@ axios_1.default.interceptors.request.use(config => {
 axios_1.default.interceptors.response.use(response => {
     const config = response.config;
     const cookies = response.headers['set-cookie'];
-    cookies.forEach(cookie => {
-        config.jar.setCookieSync(cookie, response.config.url, { ignoreError: true });
-    });
+    if (cookies) {
+        cookies.forEach(cookie => {
+            config.jar.setCookieSync(cookie, response.config.url, { ignoreError: true });
+        });
+    }
     return response;
 }, error => Promise.reject(error));
 class Base {
