@@ -154,6 +154,10 @@ export class Testflight extends Base {
         return build;
     }
 
+    async getBetaTester (groupId: string) {
+        const res = await this.get(`${this.apiEndPoint}/iris/v1/betaTesters?filter[betaGroups]=${groupId}&filter[inviteType]=PUBLIC_LINK&limit=0`)
+        return res.data as CommonResponse<[] & {length: 0}>
+    }
 }
 
 export interface BetaReviewDetail {

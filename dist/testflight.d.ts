@@ -56,6 +56,9 @@ export declare class Testflight extends Base {
      * @param buildId
      */
     getBuild(buildId: string): Build;
+    getBetaTester(groupId: string): Promise<CommonResponse<[] & {
+        length: 0;
+    }>>;
 }
 export interface BetaReviewDetail {
     contactEmail: string | null;

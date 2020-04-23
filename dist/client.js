@@ -1,9 +1,10 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -13,9 +14,12 @@ class Client extends base_1.Base {
     constructor() {
         super(...arguments);
         this.signinUrl = 'https://idmsa.apple.com/appleauth/auth/signin';
-        this.wdigetKeyUrl = 'https://olympus.itunes.apple.com/v1/app/config?hostname=itunesconnect.apple.com';
+        this.authRequestUrl = 'https://idmsa.apple.com/appleauth/auth';
+        this.wdigetKeyUrl = 'https://appstoreconnect.apple.com/olympus/v1/app/config?hostname=itunesconnect.apple.com';
+        this.securityCodeUrl = 'https://idmsa.apple.com/appleauth/auth/verify/phone/securitycode';
         // api end point
         this.apiEndPoint = 'https://appstoreconnect.apple.com';
+        this.headers = {};
     }
     widgetKey() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -36,7 +40,25 @@ class Client extends base_1.Base {
     signin(appleId, password) {
         return __awaiter(this, void 0, void 0, function* () {
             const widgetKey = yield this.widgetKey();
-            return yield this.post(this.signinUrl, { accountName: appleId, password, rememberMe: false }, { 'X-Apple-Domain-Id': '1', 'X-Requested-With': 'XMLHttpRequest', 'X-Apple-Widget-Key': widgetKey });
+            return yield this.post(this.signinUrl, { accountName: appleId, password, rememberMe: false }, { 'X-Apple-Domain-Id': '1', 'X-Requested-With': 'XMLHttpRequest', 'X-Apple-Widget-Key': widgetKey })
+                .then(res => {
+                return Promise.resolve('ok');
+            })
+                .catch((e) => {
+                var _a;
+                this.updateRequestHeaders(e);
+                if (((_a = e.response) === null || _a === void 0 ? void 0 : _a.data.authType) === 'hsa2') {
+                    this.authRequest();
+                    // return Promise.resolve('code') as Promise<string>
+                    return Promise.resolve('code');
+                }
+                return '';
+            });
+        });
+    }
+    authRequest() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.get(this.authRequestUrl, this.headers);
         });
     }
     /**
@@ -118,6 +140,23 @@ class Client extends base_1.Base {
             return this.apps;
         });
     }
+    updateRequestHeaders(resp) {
+        this.headers["X-Apple-Id-Session-Id"] = resp.response.headers["x-apple-id-session-id"];
+        this.headers["X-Apple-Widget-Key"] = this.authServiceWidgetKey;
+        this.headers["scnt"] = resp.response.headers["scnt"];
+    }
+    securityCodeRequest(code) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.post(this.securityCodeUrl, {
+                securityCode: { code: code }, phoneNumber: { id: 2 }, mode: "sms"
+            }, this.headers).catch(e => {
+                console.log(e);
+            });
+        });
+    }
 }
 exports.Client = Client;
+function getinfo(name, age) {
+    return '';
+}
 //# sourceMappingURL=client.js.map

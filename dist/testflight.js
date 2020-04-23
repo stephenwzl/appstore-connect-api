@@ -1,9 +1,10 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -170,6 +171,12 @@ class Testflight extends base_1.Base {
         const build = new build_1.Build(buildId);
         build.cookieJar = this.cookieJar;
         return build;
+    }
+    getBetaTester(groupId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const res = yield this.get(`${this.apiEndPoint}/iris/v1/betaTesters?filter[betaGroups]=${groupId}&filter[inviteType]=PUBLIC_LINK&limit=0`);
+            return res.data;
+        });
     }
 }
 exports.Testflight = Testflight;

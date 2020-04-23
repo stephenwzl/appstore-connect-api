@@ -42,6 +42,10 @@ const betaAppLocallizations = await testflight.getBetaAppLocalizations();
 
 // 可以获取测试员群组，包括内部和外部的，通过 isInternalGroup形参标志
 const externalBetaGroups = await testflight.getBetaGroups(false);
+
+// 获取group的测试员数量
+const betaTester = await testflight.getBetaTester(groupId)
+
 // 获取一个测试员群组下已经添加的 build
 const builds = await testflight.getBetaGroupBuild(groupId);
 // 把多个 build添加到测试员群组 （前提：该 build已经提交并通过 beta审核，内部测试员群组无此限制）
@@ -61,4 +65,30 @@ const buildBetaDetials = await build.getBuildBetaDetails();
 await build.submitForBetaReview();
 
 ```
- 
+
+## 一个简单的登录实现
+
+```ts
+import { Client, Session, Testflight, Build } from 'appstore-connect-api'
+
+
+const rl = require('readline').createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+const question = (query) => new Promise<string>(resolve => rl.question(query, (answer) => resolve(answer)));
+
+const client = new Client();
+(async () => {
+  const res = await client.signin(account, password) // 填入自己的账号和密码
+  if (res === 'ok') {
+    // 登录成功
+  } else if (res === 'code') { // 验证码登录
+    let code = await question('请输入验证码 \n');
+    let s = await client.securityCodeRequest(code)
+    const session = await client.session()
+    // 登录成功
+  }
+})()
+```

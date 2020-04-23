@@ -1,5 +1,5 @@
 import { Base, CommonResponse } from './base';
-import { AxiosResponse } from 'axios';
+import { AxiosResponse, AxiosError } from 'axios';
 
 interface AuthServiceKeyObject {
     authServiceUrl: string,
@@ -104,7 +104,9 @@ export interface AppStoreSessionToken {
 export class Client extends Base {
 
     private signinUrl = 'https://idmsa.apple.com/appleauth/auth/signin';
-    private wdigetKeyUrl = 'https://olympus.itunes.apple.com/v1/app/config?hostname=itunesconnect.apple.com';
+    private authRequestUrl = 'https://idmsa.apple.com/appleauth/auth';
+    private wdigetKeyUrl = 'https://appstoreconnect.apple.com/olympus/v1/app/config?hostname=itunesconnect.apple.com';
+    private securityCodeUrl = 'https://idmsa.apple.com/appleauth/auth/verify/phone/securitycode'
     // api end point
     apiEndPoint = 'https://appstoreconnect.apple.com'
 
@@ -114,6 +116,8 @@ export class Client extends Base {
     private sessionData?: Session;
     private apps?: [App];
     private userDetail?: AppStoreUserDetail;
+    private headers: any = {};
+
 
     private async widgetKey() {
         if (this.authServiceWidgetKey) {
@@ -129,11 +133,28 @@ export class Client extends Base {
      * @param appleId Apple ID(email format)
      * @param password Apple ID Password (no two-step verification)
      */
-    async signin(appleId: string, password: string) {
+    async signin(appleId: string, password: string): Promise<string> {
+        
         const widgetKey = await this.widgetKey();
         return await this.post(this.signinUrl,
             { accountName: appleId, password, rememberMe: false },
-            { 'X-Apple-Domain-Id': '1', 'X-Requested-With': 'XMLHttpRequest', 'X-Apple-Widget-Key': widgetKey });
+            { 'X-Apple-Domain-Id': '1', 'X-Requested-With': 'XMLHttpRequest', 'X-Apple-Widget-Key': widgetKey })
+            .then(res => {
+                return Promise.resolve('ok') as Promise<string>
+            })
+            .catch((e: AxiosError) => {
+                this.updateRequestHeaders(e)
+                if (e.response?.data.authType === 'hsa2') {
+                    this.authRequest()
+                    // return Promise.resolve('code') as Promise<string>
+                    return Promise.resolve<string>('code')
+                }
+                return ''
+            });
+    }
+
+    async authRequest () {
+        this.get(this.authRequestUrl, this.headers)
     }
     /**
      * get session data
@@ -207,5 +228,24 @@ export class Client extends Base {
         }
         return this.apps;
     }
+    
+    updateRequestHeaders (resp: AxiosError) {
+      this.headers["X-Apple-Id-Session-Id"] = resp.response!.headers["x-apple-id-session-id"]
+      this.headers["X-Apple-Widget-Key"] = this.authServiceWidgetKey
+      this.headers["scnt"] = resp.response!.headers["scnt"]
+    }
 
+    async securityCodeRequest(code: string) {
+        return await this.post(this.securityCodeUrl, {
+             securityCode: { code: code }, phoneNumber: { id: 2 }, mode: "sms" 
+        }, this.headers).catch(e => {
+            console.log(e);
+        })
+    }
+
+}
+
+
+function getinfo(name:string, age: number): string {
+    return ''
 }

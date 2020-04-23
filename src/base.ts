@@ -1,5 +1,7 @@
 import axios, { AxiosResponse, AxiosInstance, AxiosStatic } from 'axios';
 import { CookieJar, Cookie } from 'tough-cookie';
+import * as fs from 'fs';
+import * as path from 'path';
 
 declare module 'axios' {
     export interface AxiosRequestConfig {
@@ -8,6 +10,14 @@ declare module 'axios' {
 }
 
 axios.interceptors.request.use(config => {
+    try {
+        let cookies = fs.readFileSync(path.resolve(process.cwd(), 'cookie.txt')).toString()
+        if (cookies) {
+            config.jar = CookieJar.fromJSON(JSON.parse(cookies))
+        }
+    } catch (error) {
+        
+    }
     if (config.jar) {
         if (!config.headers) { config.headers = {} };
         config.headers['cookie'] = config.jar.getCookieStringSync(config.url!);
@@ -22,6 +32,8 @@ axios.interceptors.response.use(response => {
         cookies.forEach(cookie => {
             config.jar!.setCookieSync(cookie, response.config.url!, { ignoreError: true });
         });
+        // 序列化
+        fs.writeFileSync(path.resolve(process.cwd(), 'cookie.txt'), JSON.stringify(config.jar!.toJSON()))
     }
     return response;
 }, error => Promise.reject(error));
@@ -89,3 +101,4 @@ export interface IrisCommonDataFormat<T> {
     relationships?: any;
     links?: any;
 }
+
